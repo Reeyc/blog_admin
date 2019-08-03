@@ -80,7 +80,12 @@ export default {
       border-radius: 50%
   .iconfont
     margin-right: 10px
-// 展开时的宽度
+//展开时的宽度
 .el-menu-vertical-demo:not(.el-menu--collapse)
   width: 260px
+@media (max-width: 500px)
+//收起的宽度（500px以下的屏幕完全收起）
+  .el-menu-vertical-demo.el-menu--collapse
+    width: 0
+    display: none
 </style>

@@ -30,6 +30,9 @@ export default {
   display: flex
   .main
     width: 100%
+    // 右侧内容区最多响应至 => iphone6/6s
+    min-width: 375px
+    overflow: auto
     .content
       padding: 20px 30px
 .page-enter, .page-leave-to

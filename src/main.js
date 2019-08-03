@@ -38,6 +38,17 @@ router.afterEach(() => NProgress.done())
 
 //#################################
 
+import VueQuillEditor from 'vue-quill-editor'
+Vue.use(VueQuillEditor)
+
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+import 'highlight.js/styles/monokai-sublime.css'
+
+//#################################
+
 import {
   Pagination,
   Popover,
