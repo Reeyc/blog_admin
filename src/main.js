@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 
 import "css/reset.css"
 import "css/border.css"
@@ -50,6 +51,7 @@ import 'highlight.js/styles/monokai-sublime.css'
 //#################################
 
 import {
+  Upload,
   Pagination,
   Popover,
   Autocomplete,
@@ -93,6 +95,7 @@ import {
 } from 'element-ui';
 
 
+Vue.use(Upload);
 Vue.use(Pagination);
 Vue.use(Popover);
 Vue.use(Autocomplete);
@@ -151,6 +154,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

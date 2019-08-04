@@ -18,21 +18,39 @@ export default new Router({
     redirect: "/index/home", //嵌套路由的默认子路由
     children: [{
       path: "home",
+      meta: {
+        title: "Welcome！"
+      },
       component: r => require(["@/components/Home/Home"], r)
     }, {
       path: "all_article",
+      meta: {
+        title: "All Articles"
+      },
       component: r => require(["@/components/Article/AllArticle"], r)
     }, {
       path: "add_article",
+      meta: {
+        title: "Write a new Article！"
+      },
       component: r => require(["@/components/Article/AddArticle"], r)
     }, {
       path: "administrator",
+      meta: {
+        title: "Administrator information"
+      },
       component: r => require(["@/components/Administrator/Administrator"], r)
     }, {
       path: "setting",
+      meta: {
+        title: "Setting"
+      },
       component: r => require(["@/components/Setting/Setting"], r)
     }, {
       path: "explain",
+      meta: {
+        title: "Explain"
+      },
       component: r => require(["@/components/Explain/Explain"], r)
     }]
   }]

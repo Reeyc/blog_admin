@@ -5,6 +5,7 @@
     <div class="main">
       <Header></Header>
       <div class="content">
+        <Title></Title>
         <transition name="page" mode="out-in">
           <router-view />
         </transition>
@@ -16,8 +17,9 @@
 <script>
 import Menu from "common/Menu/Menu";
 import Header from "common/Header/Header";
+import Title from "common/Title/Title";
 export default {
-  components: { Menu, Header }
+  components: { Menu, Header, Title }
 };
 </script>
 
@@ -30,8 +32,7 @@ export default {
   display: flex
   .main
     width: 100%
-    // 右侧内容区最多响应至 => iphone6/6s
-    min-width: 375px
+    min-width: 320px
     overflow: auto
     .content
       padding: 20px 30px
