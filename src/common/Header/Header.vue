@@ -10,7 +10,7 @@
           <p class="profile-item">
             <i class="iconfont">&#xe7dc;</i>修改密码
           </p>
-          <p class="profile-item">
+          <p class="profile-item" @click="loginOut">
             <i class="iconfont">&#xe646;</i>注销登录
           </p>
           <img src="../../assets/img/logo.jpg" slot="reference" />
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -31,9 +32,15 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setToken"]),
     collapse() {
       this.isCollapse = !this.isCollapse;
       this.$bus.$emit("collapse", this.isCollapse);
+    },
+    loginOut() {
+      localStorage.removeItem("Authorization");
+      this.setToken("");
+      this.$router.replace("/login");
     }
   }
 };

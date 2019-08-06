@@ -5,7 +5,7 @@
       <el-col :xs="24" :md="16" class="left">
         <!-- 标题 -->
         <el-form-item label="标题：">
-          <el-input v-model="article.title" size="medium" placeholder="请输入文章标题..."></el-input>
+          <el-input v-model="article.title" size="medium" clearable placeholder="请输入文章标题..."></el-input>
         </el-form-item>
         <!-- 正文 -->
         <el-form-item label="正文：">
@@ -17,30 +17,32 @@
         <el-form-item label="分类：">
           <el-select
             v-model="article.category"
-            multiple
             size="medium"
+            clearable
             placeholder="请选择文章分类..."
             class="category"
           >
-            <el-option label="Layout" value="Layout"></el-option>
-            <el-option label="JavaScript" value="JavaScript"></el-option>
-            <el-option label="Utils" value="Utils"></el-option>
+            <el-option label="Layout" :value="1"></el-option>
+            <el-option label="JavaScript" :value="2"></el-option>
+            <el-option label="Utils" :value="3"></el-option>
           </el-select>
         </el-form-item>
         <!-- 描述 -->
-        <el-form-item label="描述">
-          <el-input v-model="article.desc" size="medium" placeholder="请输入文章描述..."></el-input>
+        <el-form-item label="描述：">
+          <el-input v-model="article.desc" size="medium" clearable placeholder="请输入文章描述..."></el-input>
         </el-form-item>
         <!-- 图片 -->
         <el-form-item label="缩略图：">
           <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://www.hellomk.cn/admin/api/upload_img.php"
             :show-file-list="false"
+            :before-upload="beforeUpload"
             :on-success="handleAvatarSuccess"
             class="uploader"
           >
-            <img v-if="article.imageUrl" :src="article.imageUrl" />
+            <img v-if="article.imgUrl" :src="article.imgUrl" />
             <i v-else class="el-icon-plus uploader-icon"></i>
+            <div slot="tip" class="el-upload__tip">请选择 JPG 或 PNG 格式的图片，大小不能超过 2MB</div>
           </el-upload>
         </el-form-item>
         <!-- 提交 -->
@@ -61,9 +63,9 @@ export default {
       article: {
         title: "", //标题
         content: "", //正文
-        category: [], //类别
+        category: "", //类别
         desc: "", //描述
-        imageUrl: "" //图片
+        imgUrl: "" //图片
       },
       editorOption: {
         placeholder: "请输入文章内容...",
@@ -96,21 +98,60 @@ export default {
     };
   },
   methods: {
+    //图片上传
+    beforeUpload(file) {
+      const type = file.type === "image/jpeg" || file.type === "image/png";
+      const size = file.size / 1024 / 1024 < 2;
+      //验证类型
+      if (!type) {
+        this.$message.error("图片只能是 JPG 或者 PNG 格式!");
+        return false;
+      }
+      //验证大小
+      if (!size) {
+        this.$message.error("图片大小不能超过 2MB!");
+        return false;
+      }
+      //上传至服务器
+      if (type && size) {
+        let fd = new FormData();
+        fd.append("img", file);
+        this.$http.article.uploadImg(fd).then(res => {
+          if (!res) return;
+          if (res.code === 1) {
+            this.$message.success(res.message);
+          } else {
+            this.$message.error(res.message);
+          }
+        });
+      }
+    },
+    //图片展示
     handleAvatarSuccess(res, file) {
-      this.article.imageUrl = URL.createObjectURL(file.raw);
+      console.log(file);
+      
+      this.article.imgUrl = URL.createObjectURL(file.raw);
     },
     submit() {
+      let message = "";
       if (!this.article.title) {
-        console.log("请输入文章标题");
+        message = "请输入文章标题";
       } else if (!this.article.content) {
-        console.log("请输入文章内容");
-      } else if (!this.article.category.length) {
-        console.log("请选择文章类别");
+        message = "请输入文章内容";
+      } else if (!this.article.category) {
+        message = "请选择文章类别";
       } else if (!this.article.desc) {
-        console.log("请输入文章描述");
+        message = "请输入文章描述";
       } else {
-        console.log("提交成功！");
+        this.$http.article.addArticle(this.article).then(res => {
+          message = "提交成功！";
+          this.$message.success(message);
+          console.log(res);
+        });
+        //异步的任务已加入队列，即使return了，then也不会受影响
+        return;
       }
+      this.$message.error(message);
     }
   }
 };
@@ -145,6 +186,9 @@ export default {
       width: 180px
       height: 180px
       display: block
+  .el-upload__tip
+    line-height: 0
+    margin-bottom: 15px
 .submit
   margin: 10px 0
 </style>
@@ -179,6 +223,7 @@ export default {
 .el-form-item
   margin-bottom: 15px
 .el-form-item__label
+  font-size: 18px
   float: none
 code, pre // 编辑完毕显示的代码块背景
   color: #f8f8f2

@@ -5,14 +5,14 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import "css/reset.css"
-import "css/border.css"
-import "css/iconfont.css"
+import "./assets/css/reset.css"
+import "./assets/css/border.css"
+import "./assets/css/iconfont.css"
 
 // #################################
 
-import axios from 'axios'
-Vue.prototype.$axios = axios
+import http from 'api'
+Vue.prototype.$http = http
 
 // #################################
 
@@ -33,7 +33,13 @@ NProgress.configure({
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  next();
+  if (to.path === '/login') {
+    next();
+  } else {
+    //token验证
+    const token = localStorage.getItem("Authorization")
+    token ? next() : next('/login')
+  }
 });
 router.afterEach(() => NProgress.done())
 
@@ -51,6 +57,7 @@ import 'highlight.js/styles/monokai-sublime.css'
 //#################################
 
 import {
+  Alert,
   Upload,
   Pagination,
   Popover,
@@ -94,7 +101,7 @@ import {
   Loading
 } from 'element-ui';
 
-
+Vue.use(Alert);
 Vue.use(Upload);
 Vue.use(Pagination);
 Vue.use(Popover);

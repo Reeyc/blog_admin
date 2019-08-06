@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -61,10 +62,27 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setToken"]),
     login() {
-      console.log(`user: ${this.formData.user}`);
-      console.log(`pass: ${this.formData.pass}`);
-      this.$router.push("/index");
+      if (!this.formData.user || !this.formData.pass) {
+        this.$message.error("请输入账号和密码");
+        return;
+      }
+      this.$http.login
+        .verifyLogin({
+          user: this.formData.user,
+          pass: this.formData.pass
+        })
+        .then(res => {
+          if (!res) return;
+          if (!res.authorization) {
+            this.$message.error(res.message);
+          } else {
+            this.setToken(res.authorization);
+            this.$router.replace("/index");
+          }
+        })
+        .catch(e => console.log(e));
     }
   }
 };
@@ -79,6 +97,7 @@ export default {
   width: 100%
   background-color: #006666
   .title
+    font-weight: normal
     text-align: center
     font-size: 20px
     margin-bottom: 25px

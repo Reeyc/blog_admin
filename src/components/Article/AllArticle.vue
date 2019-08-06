@@ -109,7 +109,7 @@ export default {
   methods: {
     //########## 格式化类别 ##########
     formatCate(cate) {
-      switch (cate) {
+      switch (Number(cate)) {
         case 1:
           return "Layout";
         case 2:
@@ -131,7 +131,7 @@ export default {
       }
       //选中类别
       this.data.handledData = this.data.originData.filter(item => {
-        return item.category === cate;
+        return Number(item.category) === cate;
       });
     },
     //########## 搜索框搜索 ##########
@@ -179,67 +179,19 @@ export default {
     }
   },
   created() {
-    //########## 初始化数据 (假数据) ##########
-    this.data.handledData = this.data.originData = [
-      {
-        title: "第一篇文章...",
-        content: "hello world...",
-        category: 1
-      },
-      {
-        title: "第二篇文章...",
-        content: "hello javascript...",
-        category: 2
-      },
-      {
-        title: "第三篇文章...",
-        content: "hello vue...",
-        category: 3
-      },
-      {
-        title: "第四篇文章...",
-        content: "hello react...",
-        category: 3
-      },
-      {
-        title: "第五篇文章...",
-        content: "hello node...",
-        category: 2
-      },
-      {
-        title: "第六篇文章...",
-        content: "hello yec...",
-        category: 1
-      },
-      {
-        title: "第七篇文章...",
-        content: "hello yec...",
-        category: 2
-      },
-      {
-        title: "第八篇文章...",
-        content: "hello yec...",
-        category: 3
-      },
-      {
-        title: "第九篇文章...",
-        content: "hello yec...",
-        category: 3
-      },
-      {
-        title: "第十篇文章...",
-        content: "hello yec...",
-        category: 1
-      },
-      {
-        title: "第十一篇文章...",
-        content: "hello yec...",
-        category: 1
-      }
-    ];
-    //初始化搜索框数据
-    this.query.queData = this.data.originData.map(item => {
-      return (item = { value: item.title });
+    //########## 获取数据 ##########
+    this.$http.article.allArticle().then(res => {
+      if (!res || res.code !== 1) return;
+      res.article.forEach(item => {
+        //把内容前后的<p></p>去掉
+        item.content = item.content.slice(3, -4);
+      });
+      //初始化数据
+      this.data.handledData = this.data.originData = res.article;
+      //初始化搜索框数据
+      this.query.queData = res.article.map(
+        item => (item = { value: item.title })
+      );
     });
   }
 };
