@@ -10,14 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      // '/api': {
-      //   target: 'http://www.hellomk.cn/admin',
-      //   pathRewrite: {
-      //     '^/api': '/api/user.php'
-      //   }
-      // }
-    },
+    proxyTable: {},
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

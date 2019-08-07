@@ -69,22 +69,16 @@ import {
   Submenu,
   MenuItem,
   Input,
-  Radio,
-  RadioGroup,
-  Switch,
   Select,
   Option,
   Button,
   Timeline,
-  TimelineItem,
   Table,
   TableColumn,
   Breadcrumb,
   BreadcrumbItem,
   Form,
   FormItem,
-  Tabs,
-  TabPane,
   Tag,
   Icon,
   Row,
@@ -92,12 +86,8 @@ import {
   Card,
   Collapse,
   CollapseItem,
-  Link,
   Divider,
-  Backtop,
   MessageBox,
-  Message,
-  Scrollbar,
   Loading
 } from 'element-ui';
 
@@ -113,9 +103,6 @@ Vue.use(Menu);
 Vue.use(Submenu);
 Vue.use(MenuItem);
 Vue.use(Input);
-Vue.use(Radio);
-Vue.use(RadioGroup);
-Vue.use(Switch);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(Button);
@@ -126,9 +113,6 @@ Vue.use(BreadcrumbItem);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Timeline);
-Vue.use(TimelineItem);
-Vue.use(Tabs);
-Vue.use(TabPane);
 Vue.use(Tag);
 Vue.use(Icon);
 Vue.use(Row);
@@ -136,10 +120,7 @@ Vue.use(Col);
 Vue.use(Card);
 Vue.use(Collapse);
 Vue.use(CollapseItem);
-Vue.use(Link);
 Vue.use(Divider);
-Vue.use(Backtop);
-Vue.use(Scrollbar);
 
 import 'element-ui/lib/theme-chalk/base.css';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
@@ -148,7 +129,6 @@ Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
-Vue.prototype.$message = Message;
 Vue.prototype.$loading = Loading.service;
 
 //#################################

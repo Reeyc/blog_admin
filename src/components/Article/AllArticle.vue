@@ -48,7 +48,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作">
-          <template>
+          <template slot-scope="data">
             <el-button plain type="primary" size="mini" class="btn">查看</el-button>
             <el-button plain type="info" size="mini" class="btn">编辑</el-button>
             <el-button plain type="danger" size="mini" class="btn">删除</el-button>
@@ -183,6 +183,8 @@ export default {
     this.$http.article.allArticle().then(res => {
       if (!res || res.code !== 1) return;
       res.article.forEach(item => {
+        //解码
+        item.content = decodeURIComponent(item.content);
         //把内容前后的<p></p>去掉
         item.content = item.content.slice(3, -4);
       });

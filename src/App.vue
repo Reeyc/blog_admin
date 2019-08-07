@@ -10,5 +10,10 @@ export default {
 };
 </script>
 
-<style>
+
+<style lang="stylus">
+@media (max-width: 500px)
+  .myMsg
+    min-width: 300px !important
+    max-width: 300px !important
 </style>

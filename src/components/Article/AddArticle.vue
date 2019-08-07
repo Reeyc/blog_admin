@@ -9,7 +9,7 @@
         </el-form-item>
         <!-- 正文 -->
         <el-form-item label="正文：">
-          <quill-editor v-model="article.content" :options="editorOption"></quill-editor>
+          <quill-editor v-model="article.contentShow" :options="editorOption"></quill-editor>
         </el-form-item>
       </el-col>
       <el-col :xs="24" :md="7" class="right">
@@ -40,7 +40,7 @@
             :on-success="handleAvatarSuccess"
             class="uploader"
           >
-            <img v-if="article.imgUrl" :src="article.imgUrl" />
+            <img v-if="article.imgShow" :src="article.imgShow" />
             <i v-else class="el-icon-plus uploader-icon"></i>
             <div slot="tip" class="el-upload__tip">请选择 JPG 或 PNG 格式的图片，大小不能超过 2MB</div>
           </el-upload>
@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import message from "js/message";
 import { quillEditor } from "vue-quill-editor";
 import hljs from "highlight.js";
 export default {
@@ -62,10 +63,12 @@ export default {
     return {
       article: {
         title: "", //标题
-        content: "", //正文
+        content: "", //内容
+        contentShow: "", //本地内容展示
         category: "", //类别
         desc: "", //描述
-        imgUrl: "" //图片
+        imgUrl: "", //图片地址
+        imgShow: "" //本地图片展示
       },
       editorOption: {
         placeholder: "请输入文章内容...",
@@ -104,12 +107,12 @@ export default {
       const size = file.size / 1024 / 1024 < 2;
       //验证类型
       if (!type) {
-        this.$message.error("图片只能是 JPG 或者 PNG 格式!");
+        message("图片只能是 JPG 或者 PNG 格式!");
         return false;
       }
       //验证大小
       if (!size) {
-        this.$message.error("图片大小不能超过 2MB!");
+        message("图片大小不能超过 2MB!");
         return false;
       }
       //上传至服务器
@@ -119,39 +122,56 @@ export default {
         this.$http.article.uploadImg(fd).then(res => {
           if (!res) return;
           if (res.code === 1) {
-            this.$message.success(res.message);
+            this.article.imgUrl = res.img;
+            message(res.message, "success");
           } else {
-            this.$message.error(res.message);
+            message(res.message);
           }
         });
       }
     },
     //图片展示
     handleAvatarSuccess(res, file) {
-      console.log(file);
-      
-      this.article.imgUrl = URL.createObjectURL(file.raw);
+      this.article.imgShow = URL.createObjectURL(file.raw);
     },
+    //文章提交
     submit() {
-      let message = "";
-      if (!this.article.title) {
-        message = "请输入文章标题";
-      } else if (!this.article.content) {
-        message = "请输入文章内容";
-      } else if (!this.article.category) {
-        message = "请选择文章类别";
-      } else if (!this.article.desc) {
-        message = "请输入文章描述";
-      } else {
-        this.$http.article.addArticle(this.article).then(res => {
-          message = "提交成功！";
-          this.$message.success(message);
-          console.log(res);
-        });
-        //异步的任务已加入队列，即使return了，then也不会受影响
-        return;
+      let msg = "";
+      let isLegal = true;
+      switch (true) {
+        case !this.article.title:
+          msg = "请输入文章标题";
+          isLegal = false;
+          break;
+        case !this.article.contentShow:
+          msg = "请输入文章内容";
+          isLegal = false;
+          break;
+        case !this.article.category:
+          msg = "请选择文章类别";
+          isLegal = false;
+          break;
+        case !this.article.desc:
+          msg = "请输入文章描述";
+          isLegal = false;
+          break;
       }
-      this.$message.error(message);
+      if (!isLegal) {
+        message(msg);
+      } else {
+        //show用于本地展示，提交的是content
+        this.article.content = this.article.contentShow;
+        //编码
+        this.article.content = encodeURIComponent(this.article.content);
+        this.$http.article.addArticle(this.article).then(res => {
+          if (!res || res.code !== 1) {
+            message(res.message);
+            return;
+          }
+          message(res.message, "success");
+          Object.keys(this.article).forEach(item => (this.article[item] = ""));
+        });
+      }
     }
   }
 };
@@ -225,9 +245,6 @@ export default {
 .el-form-item__label
   font-size: 18px
   float: none
-code, pre // 编辑完毕显示的代码块背景
-  color: #f8f8f2
-  background-color: #23241f
 </style>
 
 

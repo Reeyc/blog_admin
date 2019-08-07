@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import message from "js/message";
 import { mapMutations } from "vuex";
 export default {
   data() {
@@ -65,7 +66,7 @@ export default {
     ...mapMutations(["setToken"]),
     login() {
       if (!this.formData.user || !this.formData.pass) {
-        this.$message.error("请输入账号和密码");
+        message("请输入账号和密码");
         return;
       }
       this.$http.login
@@ -76,7 +77,7 @@ export default {
         .then(res => {
           if (!res) return;
           if (!res.authorization) {
-            this.$message.error(res.message);
+            message(res.message);
           } else {
             this.setToken(res.authorization);
             this.$router.replace("/index");
@@ -117,3 +118,4 @@ export default {
   .last-item
     margin-bottom: 0
 </style>
+
