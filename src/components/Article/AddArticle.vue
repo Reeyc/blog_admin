@@ -37,7 +37,7 @@
             action="http://www.hellomk.cn/admin/api/upload_img.php"
             :show-file-list="false"
             :before-upload="beforeUpload"
-            :on-success="handleAvatarSuccess"
+            :on-success="uploadSuccess"
             class="uploader"
           >
             <img v-if="article.imgShow" :src="article.imgShow" />
@@ -61,6 +61,9 @@ import hljs from "highlight.js";
 export default {
   data() {
     return {
+      //是否是编辑文章 （提交时根据该变量调整接口）
+      isEdit: false,
+      //文章数据
       article: {
         title: "", //标题
         content: "", //内容
@@ -70,6 +73,7 @@ export default {
         imgUrl: "", //图片地址
         imgShow: "" //本地图片展示
       },
+      //编辑器配置
       editorOption: {
         placeholder: "请输入文章内容...",
         modules: {
@@ -122,6 +126,7 @@ export default {
         this.$http.article.uploadImg(fd).then(res => {
           if (!res) return;
           if (res.code === 1) {
+            //获取服务器处理后返回的图片url
             this.article.imgUrl = res.img;
             message(res.message, "success");
           } else {
@@ -130,8 +135,8 @@ export default {
         });
       }
     },
-    //图片展示
-    handleAvatarSuccess(res, file) {
+    //本地图片展示
+    uploadSuccess(res, file) {
       this.article.imgShow = URL.createObjectURL(file.raw);
     },
     //文章提交
@@ -156,23 +161,61 @@ export default {
           isLegal = false;
           break;
       }
+      //表单填写不合法
       if (!isLegal) {
         message(msg);
-      } else {
-        //show用于本地展示，提交的是content
-        this.article.content = this.article.contentShow;
-        //编码
-        this.article.content = encodeURIComponent(this.article.content);
+        return;
+      }
+
+      //先将内容编码，show用于本地展示，真正提交的是content
+      this.article.content = encodeURIComponent(this.article.contentShow);
+
+      //添加文章接口
+      if (!this.isEdit) {
         this.$http.article.addArticle(this.article).then(res => {
           if (!res || res.code !== 1) {
             message(res.message);
             return;
           }
           message(res.message, "success");
+          //添加文章成功后，清空编辑器内容
           Object.keys(this.article).forEach(item => (this.article[item] = ""));
         });
+        return;
       }
+
+      //编辑文章接口
+      this.$http.article.editArticle(this.article).then(res => {
+        if (!res || res.code !== 1) {
+          message(res.message);
+          return;
+        }
+        message(res.message, "success");
+        //编辑文章成功后，跳回列表页
+        setTimeout(() => {
+          this.$router.push("/index/all_article");
+        }, 2000);
+      });
+    },
+    //获取编辑文章信息
+    edit() {
+      //路由id存在说明是编辑文章，反之是添加文章
+      const id = this.$route.query.id;
+      if (!id) return;
+      this.isEdit = true;
+      this.$http.article.detailArticle(Number(id)).then(res => {
+        if (!res || res.code !== 1) return;
+        //特别注意：vue数据新添加的属性是不会双向绑定的，所以要在给vue数据赋值之前就已经存在该属性
+        res.article.imgShow = res.article.img;
+        this.article = res.article;
+        this.article.content = decodeURIComponent(this.article.content); //内容解码
+        this.article.contentShow = this.article.content; //本地的展示内容
+        this.article.category = Number(this.article.category); //类别转为number
+      });
     }
+  },
+  created() {
+    this.edit();
   }
 };
 </script>
@@ -202,10 +245,11 @@ export default {
       height: 180px
       line-height: 180px
       text-align: center
+      opacity: 0.8
     img
+      display: block
       width: 180px
       height: 180px
-      display: block
   .el-upload__tip
     line-height: 0
     margin-bottom: 15px

@@ -128,7 +128,6 @@ Vue.component(CollapseTransition.name, CollapseTransition)
 
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
-Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$loading = Loading.service;
 
 //#################################

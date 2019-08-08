@@ -3,6 +3,16 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+const Login = r => require.ensure([], () => r(require('@/components/Login/Login')), 'Login')
+const Index = r => require.ensure([], () => r(require('@/components/Index/Index')), 'Index')
+const Home = r => require.ensure([], () => r(require('@/components/Home/Home')), 'Home')
+const AllArticle = r => require.ensure([], () => r(require('@/components/Article/AllArticle')), 'AllArticle')
+const AddArticle = r => require.ensure([], () => r(require('@/components/Article/AddArticle')), 'AddArticle')
+const Administrator = r => require.ensure([], () => r(require('@/components/Administrator/Administrator')), 'Administrator')
+const Setting = r => require.ensure([], () => r(require('@/components/Setting/Setting')), 'Setting')
+const Explain = r => require.ensure([], () => r(require('@/components/Explain/Explain')), 'Explain')
+const Refresh = r => require.ensure([], () => r(require('@/common/Refresh/Refresh')), 'Refresh')
+
 export default new Router({
   routes: [{
     path: '/',
@@ -10,48 +20,43 @@ export default new Router({
   }, {
     path: '/login',
     name: 'login',
-    component: r => require(["@/components/Login/Login"], r)
+    component: Login
   }, {
     path: '/index',
     name: 'index',
-    component: r => require(["@/components/Index/Index"], r),
+    component: Index,
     redirect: "/index/home", //嵌套路由的默认子路由
     children: [{
       path: "home",
-      meta: {
-        title: "Welcome！"
-      },
-      component: r => require(["@/components/Home/Home"], r)
+      component: Home,
+      meta: { title: "Welcome！" }
     }, {
       path: "all_article",
-      meta: {
-        title: "All Articles"
-      },
-      component: r => require(["@/components/Article/AllArticle"], r)
+      component: AllArticle,
+      meta: { title: "All Articles" },
+      
     }, {
       path: "add_article",
-      meta: {
-        title: "Write a new Article！"
-      },
-      component: r => require(["@/components/Article/AddArticle"], r)
+      component: AddArticle,
+      meta: { title: "Write a new Article！" },
+      
     }, {
       path: "administrator",
-      meta: {
-        title: "Administrator information"
-      },
-      component: r => require(["@/components/Administrator/Administrator"], r)
+      component: Administrator,
+      meta: { title: "Administrator information" },
+      
     }, {
       path: "setting",
-      meta: {
-        title: "Setting"
-      },
-      component: r => require(["@/components/Setting/Setting"], r)
+      component: Setting,
+      meta: { title: "Setting" },
+      
     }, {
       path: "explain",
-      meta: {
-        title: "Explain"
-      },
-      component: r => require(["@/components/Explain/Explain"], r)
+      component: Explain,
+      meta: { title: "Explain" },
+    }, {
+      path: "refresh",
+      component: Refresh
     }]
   }]
 })

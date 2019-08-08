@@ -16,4 +16,7 @@ export default {
   .myMsg
     min-width: 300px !important
     max-width: 300px !important
+  .myConfirm
+    min-width: 300px !important
+    max-width: 300px !important
 </style>

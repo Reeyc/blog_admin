@@ -3,7 +3,7 @@
   <div class="all-article">
     <!-- 批量删除 / 筛选 / 查询 -->
     <div class="filter">
-      <el-button type="danger" size="small" :disabled="!check.length">批量删除</el-button>
+      <el-button type="danger" size="small" :disabled="!check.length" @click="del(check)">批量删除</el-button>
       <el-select
         v-model="seleVal"
         @change="selectChange"
@@ -37,9 +37,9 @@
             <span class="ellipsis">{{data.row.title}}</span>
           </template>
         </el-table-column>
-        <el-table-column label="文章内容">
+        <el-table-column label="创建时间">
           <template slot-scope="data">
-            <span class="ellipsis">{{data.row.content}}</span>
+            <span>{{data.row.create}}</span>
           </template>
         </el-table-column>
         <el-table-column label="所属分类">
@@ -49,9 +49,16 @@
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="data">
-            <el-button plain type="primary" size="mini" class="btn">查看</el-button>
-            <el-button plain type="info" size="mini" class="btn">编辑</el-button>
-            <el-button plain type="danger" size="mini" class="btn">删除</el-button>
+            <el-button plain type="primary" size="mini" @click="view(data.row.id)" class="btn">查看</el-button>
+            <el-button plain type="info" size="mini" @click="edit(data.row.id)" class="btn">编辑</el-button>
+            <el-button
+              plain
+              type="danger"
+              size="mini"
+              :disabled="check.length"
+              @click="del(data.row.id)"
+              class="btn"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,6 +77,8 @@
 </template>
 
 <script>
+import firm from "js/confirm";
+import message from "js/message";
 export default {
   data() {
     return {
@@ -155,7 +164,8 @@ export default {
     },
     //########## 复选框选中 ##########
     selectRow(rows) {
-      this.check = rows;
+      if (!rows) return;
+      this.check = rows.map(item => item.id);
     },
     //########## 更新当前页数 ##########
     handleCurrentChange(val) {
@@ -164,6 +174,38 @@ export default {
     //########## 更新每页的条数 ##########
     handleSizeChange(val) {
       this.paginations.pgSz = val;
+    },
+    //########## 查看文章 ##########
+    view(id) {
+      if (!id) return;
+      location.href = `http://www.hellomk.cn/blog/#/article/${id}`;
+    },
+    //########## 编辑文章 ##########
+    edit(id) {
+      if (!id) return;
+      this.$router.push({
+        path: "/index/add_article",
+        query: { id }
+      });
+    },
+    //########## 删除文章 ##########
+    del(id) {
+      if (!id) return;
+      // 删除单个, id是字符串
+      // 删除多个, id是字符串数组
+      if (Array.isArray(id)) id += "";
+      firm("确定要删除该文章吗？", "此操作不可恢复")
+        .then(() => {
+          this.$http.article.delArticle(id).then(res => {
+            if (!res || res.code === 0) {
+              message(res.message);
+              return;
+            }
+            message(res.message, "success");
+            this.$router.replace("/index/refresh"); //跳转路由中转站，实现路由刷新
+          });
+        })
+        .catch(e => {});
     }
   },
   watch: {
@@ -183,7 +225,7 @@ export default {
     this.$http.article.allArticle().then(res => {
       if (!res || res.code !== 1) return;
       res.article.forEach(item => {
-        //解码
+        //内容解码
         item.content = decodeURIComponent(item.content);
         //把内容前后的<p></p>去掉
         item.content = item.content.slice(3, -4);
