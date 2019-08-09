@@ -12,6 +12,10 @@ export default {
 
 
 <style lang="stylus">
+code, pre
+  color: #e4e7ed
+  background-color: #263238
+  font-family: Consolas, Monaco, Menlo, Bitstream Vera Sans Mono, DejaVu Sans Mono, monospace !important
 @media (max-width: 500px)
   .myMsg
     min-width: 300px !important

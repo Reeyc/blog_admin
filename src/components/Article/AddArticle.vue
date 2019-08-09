@@ -57,7 +57,6 @@
 <script>
 import message from "js/message";
 import { quillEditor } from "vue-quill-editor";
-import hljs from "highlight.js";
 export default {
   data() {
     return {
@@ -70,7 +69,7 @@ export default {
         contentShow: "", //本地内容展示
         category: "", //类别
         desc: "", //描述
-        imgUrl: "", //图片地址
+        img: "", //图片地址
         imgShow: "" //本地图片展示
       },
       //编辑器配置
@@ -96,10 +95,7 @@ export default {
             [{ align: [] }], //对齐方式
             [{ font: [] }], //字体样式
             [{ header: [1, 2, 3, 4, 5, 6, false] }] //标题字体
-          ],
-          syntax: {
-            highlight: text => hljs.highlightAuto(text).value //higtlight监听代码设置高亮
-          }
+          ]
         }
       }
     };
@@ -127,7 +123,7 @@ export default {
           if (!res) return;
           if (res.code === 1) {
             //获取服务器处理后返回的图片url
-            this.article.imgUrl = res.img;
+            this.article.img = res.img;
             message(res.message, "success");
           } else {
             message(res.message);
@@ -167,7 +163,7 @@ export default {
         return;
       }
 
-      //先将内容编码，show用于本地展示，真正提交的是content
+      //content编码，show用于本地展示，真正提交的是content
       this.article.content = encodeURIComponent(this.article.contentShow);
 
       //添加文章接口
