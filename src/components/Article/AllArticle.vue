@@ -28,7 +28,7 @@
     </div>
     <!-- 文章列表 -->
     <div class="article-list">
-      <el-table :data="handleData" stripe highlight-current-row @selection-change="selectRow">
+      <el-table :data="initData" stripe highlight-current-row @selection-change="selectRow">
         <el-table-column type="selection"></el-table-column>
         <el-table-column type="index"></el-table-column>
         <!-- 自己定制单元格的模板，方便ellipsis文字溢出省略 -->
@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column label="所属分类">
           <template slot-scope="data">
-            <span class="ellipsis">{{formatCate(data.row.category)}}</span>
+            <span class="ellipsis">{{cate(data.row.category)}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -79,9 +79,12 @@
 <script>
 import firm from "js/confirm";
 import message from "js/message";
+import { cateFormat } from "js/cate";
 export default {
   data() {
     return {
+      //########## 格式化类别 ##########
+      cate: cateFormat,
       //########## 选择器变量 ##########
       seleVal: "all",
       //########## 搜索框 ##########
@@ -106,7 +109,7 @@ export default {
   },
   computed: {
     //########## 分页与数据联动 ##########
-    handleData() {
+    initData() {
       //从首页到上一页的表单数据
       const oldData = (this.paginations.curPg - 1) * this.paginations.pgSz;
       //从首页到当前页的表单数据
@@ -116,19 +119,6 @@ export default {
     }
   },
   methods: {
-    //########## 格式化类别 ##########
-    formatCate(cate) {
-      switch (Number(cate)) {
-        case 1:
-          return "Layout";
-        case 2:
-          return "JavaScript";
-        case 3:
-          return "Util";
-        default:
-          return "Unknown";
-      }
-    },
     //########## 选择器筛选 ##########
     selectChange(cate) {
       //筛选后跳到第一页

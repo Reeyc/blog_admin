@@ -22,9 +22,14 @@
             placeholder="请选择文章分类..."
             class="category"
           >
-            <el-option label="Layout" :value="1"></el-option>
-            <el-option label="JavaScript" :value="2"></el-option>
-            <el-option label="Utils" :value="3"></el-option>
+            <el-option-group v-for="group of sele" :key="group.title" :label="group.title">
+              <el-option
+                v-for="(item,index) of group.content"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              >{{ item.label }}</el-option>
+            </el-option-group>
           </el-select>
         </el-form-item>
         <!-- 描述 -->
@@ -56,12 +61,17 @@
 
 <script>
 import message from "js/message";
+import { cateFormat, selectCate } from "js/cate";
 import { quillEditor } from "vue-quill-editor";
 export default {
   data() {
     return {
       //是否是编辑文章 （提交时根据该变量调整接口）
       isEdit: false,
+      //格式化分类
+      cate: cateFormat,
+      //分类选择器数据
+      sele: [],
       //文章数据
       article: {
         title: "", //标题
@@ -211,6 +221,8 @@ export default {
     }
   },
   created() {
+    //初始化选择器数据
+    this.sele = selectCate();
     this.edit();
   }
 };
