@@ -24,7 +24,12 @@
             ></el-input>
           </el-form-item>
           <el-form-item class="item last-item">
-            <el-button size="medium" type="primary" class="login" @click="login">登录</el-button>
+            <el-button
+              size="medium"
+              type="primary"
+              class="login"
+              @click.enter.native="login"
+            >登录</el-button>
           </el-form-item>
         </el-form>
       </el-card>

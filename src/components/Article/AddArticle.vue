@@ -63,6 +63,7 @@
 import message from "js/message";
 import { cateFormat, selectCate } from "js/cate";
 import { quillEditor } from "vue-quill-editor";
+import quillConfig from "js/quill-config.js";
 export default {
   data() {
     return {
@@ -72,6 +73,8 @@ export default {
       cate: cateFormat,
       //分类选择器数据
       sele: [],
+      //编辑器配置
+      editorOption: quillConfig,
       //文章数据
       article: {
         title: "", //标题
@@ -81,32 +84,6 @@ export default {
         desc: "", //描述
         img: "", //图片地址
         imgShow: "" //本地图片展示
-      },
-      //编辑器配置
-      editorOption: {
-        placeholder: "请输入文章内容...",
-        modules: {
-          toolbar: [
-            [
-              "bold", //加粗
-              "italic", //斜体
-              "underline", //下划线
-              "strike", //删除线
-              "blockquote", //引用
-              "code-block", //代码块
-              "image", //图片
-              "video", //视频
-              "clean" //清除字体样式
-            ],
-            [{ direction: "rtl" }], //文本方向切换
-            [{ background: [] }, { color: [] }], //文字颜色、背景颜色
-            [{ list: "ordered" }, { list: "bullet" }], //有序列表、圆点列表
-            [{ indent: "+1" }, { indent: "-1" }], //缩进、反缩进
-            [{ align: [] }], //对齐方式
-            [{ font: [] }], //字体样式
-            [{ header: [1, 2, 3, 4, 5, 6, false] }] //标题字体
-          ]
-        }
       }
     };
   },
@@ -224,6 +201,10 @@ export default {
     //初始化选择器数据
     this.sele = selectCate();
     this.edit();
+  },
+  mounted() {
+    //初始化编辑器自定义工具图标样式
+    quillConfig.initButton();
   }
 };
 </script>
@@ -265,31 +246,6 @@ export default {
   margin: 10px 0
 </style>
 
-<style lang="stylus">
-.quill-editor // 编辑器容器高度（含工具栏）
-  height: 480px
-  .ql-container // 工具栏根据不同的屏幕尺寸、高度不一致，内容盒子取值为容器的70%（不含工具栏）
-    height: 70%
-.ql-syntax // 代码块内容不换行
-  word-break: break-word
-  word-wrap: normal
-  white-space: pre
-  overflow: auto
-  padding: 8px
-  border-radius: 8px
-  border: 3px solid #ccc
-.ql-picker-label // 下拉框内文字高度不平
-  line-height: 24px
-  overflow: hidden
-.ql-size // 字体大小[下拉框]宽度太宽
-  width: 76px !important
-.ql-header // 标题字体[下拉框]宽度太宽
-  width: 92px !important
-.ql-font // 字体样式[下拉框]宽度太宽
-  width: 100px !important
-.ql-picker-options // 下拉框下拉距Top太近
-  top: 120% !important
-</style>
 
 <style lang="stylus">
 .el-form-item

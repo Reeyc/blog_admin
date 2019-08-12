@@ -1,0 +1,48 @@
+// 编辑器容器高度（含工具栏）
+.quill-editor
+    height: 480px
+    // 工具栏根据不同的屏幕尺寸、高度不一致，内容盒子取值为容器的70%（不含工具栏）
+    .ql-container
+        height: 70%
+        blockquote
+            padding: 10px 15px
+            margin: 10px 0
+            border-left: 4px solid #eb5055
+            background-color: #f6f6f6
+// 代码块内容不换行
+.ql-syntax
+    white-space: pre !important
+    overflow: auto !important
+    border: 2px solid #ccc
+// 下拉框内文字高度不平
+.ql-picker-label
+    line-height: 24px
+    overflow: hidden
+// 标题字体[下拉框]宽度太宽
+.ql-header
+    width: 92px !important
+// 字体样式[下拉框]宽度太宽
+.ql-font
+    width: 100px !important
+// 下拉框下拉距Top太近
+.ql-picker-options
+    top: 120% !important
+// 自定义的工具图标
+.edit-icon
+    font-size: 18px
+    font-weight: bold !important
+// 自定义的工具图标 => 文本高亮
+.light
+    font-size: 13px !important
+    padding: 0 3px !important
+    color: #c7254e !important
+    background: #f9f2f4 !important
+    font-family: Consolas, Monaco, Menlo, Bitstream Vera Sans Mono, DejaVu Sans Mono, monospace !important
+// 弹框
+@media (max-width: 500px)
+    .myMsg
+        min-width: 300px !important
+        max-width: 300px !important
+    .myConfirm
+        min-width: 300px !important
+        max-width: 300px !important
