@@ -9,6 +9,7 @@ const Home = r => require.ensure([], () => r(require('@/components/Home/Home')),
 const AllArticle = r => require.ensure([], () => r(require('@/components/Article/AllArticle')), 'AllArticle')
 const AddArticle = r => require.ensure([], () => r(require('@/components/Article/AddArticle')), 'AddArticle')
 const Administrator = r => require.ensure([], () => r(require('@/components/Administrator/Administrator')), 'Administrator')
+const Comment = r => require.ensure([], () => r(require('@/components/Comment/Comment')), 'Comment')
 const Setting = r => require.ensure([], () => r(require('@/components/Setting/Setting')), 'Setting')
 const Explain = r => require.ensure([], () => r(require('@/components/Explain/Explain')), 'Explain')
 const Refresh = r => require.ensure([], () => r(require('@/common/Refresh/Refresh')), 'Refresh')
@@ -29,31 +30,45 @@ export default new Router({
     children: [{
       path: "home",
       component: Home,
-      meta: { title: "Welcome！" }
+      meta: {
+        title: "Welcome！"
+      }
     }, {
       path: "all_article",
       component: AllArticle,
-      meta: { title: "All Articles" },
-      
+      meta: {
+        title: "All Articles"
+      },
     }, {
       path: "add_article",
       component: AddArticle,
-      meta: { title: "Write a new Article！" },
-      
+      meta: {
+        title: "Write a new Article！"
+      },
+    }, {
+      path: "comment",
+      component: Comment,
+      meta: {
+        title: "All Comments"
+      },
     }, {
       path: "administrator",
       component: Administrator,
-      meta: { title: "Administrator information" },
-      
+      meta: {
+        title: "Administrator information"
+      },
     }, {
       path: "setting",
       component: Setting,
-      meta: { title: "Setting" },
-      
+      meta: {
+        title: "Setting"
+      },
     }, {
       path: "explain",
       component: Explain,
-      meta: { title: "Explain" },
+      meta: {
+        title: "Explain"
+      },
     }, {
       path: "refresh",
       component: Refresh

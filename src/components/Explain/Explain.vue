@@ -1,3 +1,3 @@
 <template>
-  <div>explain</div>
+  <div>项目说明页，待完善...</div>
 </template>

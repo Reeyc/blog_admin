@@ -5,16 +5,21 @@
     <div class="filter">
       <el-button type="danger" size="small" :disabled="!check.length" @click="del(check)">批量删除</el-button>
       <el-select
-        v-model="seleVal"
+        v-model="select.seleVal"
         @change="selectChange"
         size="small"
         placeholder="筛选文章类别..."
         class="select"
       >
         <el-option label="全部" value="all"></el-option>
-        <el-option label="Layout" :value="1"></el-option>
-        <el-option label="JavaScript" :value="2"></el-option>
-        <el-option label="Util" :value="3"></el-option>
+        <el-option-group v-for="group of select.sele" :key="group.title" :label="group.title">
+          <el-option
+            v-for="(item,index) of group.content"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          >{{ item.label }}</el-option>
+        </el-option-group>
       </el-select>
       <el-autocomplete
         v-model="query.queVal"
@@ -79,15 +84,15 @@
 <script>
 import firm from "js/confirm";
 import message from "js/message";
-import { cateFormat } from "js/cate";
+import { cateFormat, selectCate } from "js/cate";
 export default {
   data() {
     return {
-      //########## 格式化类别 ##########
-      cate: cateFormat,
-      //########## 选择器变量 ##########
-      seleVal: "all",
-      //########## 搜索框 ##########
+      cate: cateFormat, //格式化类别
+      select: {
+        seleVal: "all", //选择器变量
+        sele: [] //选择器数据
+      },
       query: {
         queVal: "", //搜索框变量
         queData: [] //搜索框数据
@@ -227,6 +232,9 @@ export default {
         item => (item = { value: item.title })
       );
     });
+    //初始化选择器数据
+    this.select.sele = selectCate();
+    console.log(this.select.sele);
   }
 };
 </script>

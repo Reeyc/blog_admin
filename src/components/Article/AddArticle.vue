@@ -61,7 +61,7 @@
 
 <script>
 import message from "js/message";
-import { cateFormat, selectCate } from "js/cate";
+import { selectCate } from "js/cate";
 import { quillEditor } from "vue-quill-editor";
 import quillConfig from "js/quill-config.js";
 export default {
@@ -69,8 +69,6 @@ export default {
     return {
       //是否是编辑文章 （提交时根据该变量调整接口）
       isEdit: false,
-      //格式化分类
-      cate: cateFormat,
       //分类选择器数据
       sele: [],
       //编辑器配置
@@ -254,5 +252,3 @@ export default {
   font-size: 18px
   float: none
 </style>
-
-

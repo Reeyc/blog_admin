@@ -1,3 +1,3 @@
 <template>
-  <div>hello</div>
+  <div>首页，待完善...</div>
 </template>

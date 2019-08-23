@@ -33,6 +33,11 @@
         <span>添加文章</span>
       </el-menu-item>
     </el-submenu>
+     <!-- 评论 -->
+    <el-menu-item index="/index/comment">
+      <i class="iconfont">&#xe600;</i>
+      <span>评论</span>
+    </el-menu-item>
     <!-- 管理员 -->
     <el-menu-item index="/index/administrator">
       <i class="iconfont">&#xe600;</i>

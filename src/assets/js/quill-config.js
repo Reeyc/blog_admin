@@ -54,8 +54,6 @@ const handlers = {
     const code = document.createElement("code");
     //code标签获取选中文本标签的内容
     code.innerText = ele.innerText
-    //code标签添加高亮
-    code.classList.add("light")
     //把文本标签内容清空，code标签添加进去
     ele.innerHTML = ""
     ele.appendChild(code)
